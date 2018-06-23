@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context=".MainActivity">
+
+        <item
+            android:id="@+id/sort_by_rating"
+            android:orderInCategory="1"
+            android:title="@string/menu_sort_by_rating"
+            app:showAsAction="ifRoom"/>
+
+        <item
+            android:id="@+id/sort_by_popularity"
+            android:orderInCategory="1"
+            android:title="@string/tv_sort_by_popularity"
+            app:showAsAction="ifRoom"/>
+</menu>

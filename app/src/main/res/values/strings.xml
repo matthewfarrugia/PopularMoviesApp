@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Popular Movies App</string>
+    <string name="tv_error_display">There has been a murder/error</string>
+    <string name="tv_rating">Rating</string>
+    <string name="title_activity_detailed">DetailedActivity</string>
+    <string name="tv_release_date">Release Date:</string>
+    <string name="tv_placeholder">placeholder</string>
+    <string name="menu_sort_by_rating">Sort by Rating</string>
+    <string name="tv_sort_by_popularity">Sort by Popularity</string>
+</resources>
