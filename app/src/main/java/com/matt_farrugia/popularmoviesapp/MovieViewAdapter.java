@@ -16,11 +16,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 public class MovieViewAdapter extends Adapter<MovieViewAdapter.MovieDataViewHolder> {
 
     private JSONArray mDataHolder;
@@ -78,40 +73,6 @@ public class MovieViewAdapter extends Adapter<MovieViewAdapter.MovieDataViewHold
     public int getItemCount() {
         if (mDataHolder == null) return 0;
         return mDataHolder.length();
-    }
-
-    public void sortData(String orderBy) throws JSONException {
-        if (mDataHolder != null) {
-            List<JSONObject> JSONList = new ArrayList<>();
-            for (int i = 0; i < mDataHolder.length(); i++) {
-                JSONList.add(mDataHolder.getJSONObject(i));
-            }
-            class JSONComparator implements Comparator<JSONObject> {
-                private String mOrderBy;
-
-                private JSONComparator(String orderBy) {
-                    mOrderBy = orderBy;
-                }
-
-                public int compare(JSONObject a, JSONObject b) {
-                    try {
-                        int valA = a.getInt(mOrderBy);
-                        int valB = b.getInt(mOrderBy);
-                        return valB - valA;
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        return 0;
-                    }
-                }
-            }
-            Collections.sort(JSONList, new JSONComparator(orderBy));
-            JSONArray SortedJSON = new JSONArray();
-            for (int i = 0; i < JSONList.size(); i++) {
-                SortedJSON.put(i, JSONList.get(i));
-            }
-            mDataHolder = SortedJSON;
-            notifyDataSetChanged();
-        }
     }
 
     public class MovieDataViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
