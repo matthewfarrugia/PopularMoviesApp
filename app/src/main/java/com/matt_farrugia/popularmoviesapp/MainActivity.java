@@ -14,8 +14,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity implements MovieViewAdapter.MovieOnClickHandler  {
 
@@ -41,7 +42,13 @@ public class MainActivity extends AppCompatActivity implements MovieViewAdapter.
         mMovieAdapter = new MovieViewAdapter(this);
         mRecyclerViewMainActivity.setAdapter(mMovieAdapter);
 
-        loadMovieData();
+        loadMovieData(Constants.popularBaseUrl);
+    }
+
+    private void showProgressBar(){
+        mProgressBar.setVisibility(View.VISIBLE);
+        mErrorMessageDisplay.setVisibility(View.GONE);
+        mRecyclerViewMainActivity.setVisibility(View.GONE);
     }
 
     private void showMovieData(){
@@ -56,8 +63,8 @@ public class MainActivity extends AppCompatActivity implements MovieViewAdapter.
         mRecyclerViewMainActivity.setVisibility(View.GONE);
     }
 
-    private void loadMovieData(){
-        new fetchFromSource().execute();
+    private void loadMovieData(String endpoint){
+        new fetchFromSource(this, endpoint).execute();
     }
 
     @Override
@@ -68,21 +75,21 @@ public class MainActivity extends AppCompatActivity implements MovieViewAdapter.
         startActivity(intent);
     }
 
-    private void sortMovieData(String orderBy){
-        try {
-            mMovieAdapter.sortData(orderBy);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
+    static class fetchFromSource extends AsyncTask<Void, Void, String> {
 
-    class fetchFromSource extends AsyncTask<Void, Void, String> {
+        private final WeakReference<MainActivity> activityReference;
+        private final String mEndpoint;
+
+        // only retain a weak reference to the activity
+        fetchFromSource(MainActivity context, String endpoint) {
+            activityReference = new WeakReference<>(context);
+            mEndpoint = endpoint;
+        }
 
         @Override
         protected String doInBackground(Void... voids) {
-
             try {
-                return NetworkUtils.fetchPopularMovies();
+                return NetworkUtils.fetchPopularMovies(mEndpoint);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -90,11 +97,12 @@ public class MainActivity extends AppCompatActivity implements MovieViewAdapter.
         }
         @Override
         protected void onPostExecute(String movieData) {
+            MainActivity activity = activityReference.get();
             if (movieData != null) {
-                mMovieAdapter.setData(movieData);
-                showMovieData();
+                activity.mMovieAdapter.setData(movieData);
+                activity.showMovieData();
             } else {
-                showErrorMessage();
+                activity.showErrorMessage();
             }
         }
     }
@@ -110,10 +118,12 @@ public class MainActivity extends AppCompatActivity implements MovieViewAdapter.
         int id = item.getItemId();
 
         if (id == R.id.sort_by_rating) {
-            sortMovieData("vote_average");
+            loadMovieData(Constants.topRatedBaseUrl);
+            showProgressBar();
             return true;
         } else if (id == R.id.sort_by_popularity) {
-            sortMovieData("popularity");
+            loadMovieData(Constants.popularBaseUrl);
+            showProgressBar();
             return true;
         }
 
