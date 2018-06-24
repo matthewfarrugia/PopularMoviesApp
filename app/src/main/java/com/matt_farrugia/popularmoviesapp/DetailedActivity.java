@@ -14,17 +14,27 @@ import org.json.JSONObject;
 
 public class DetailedActivity extends AppCompatActivity {
 
+    private ImageView mMoviePoster;
+    private TextView mMovieTitle;
+    private TextView mMovieSummary;
+    private TextView mMovieReleaseDate;
+    private TextView mMovieUserRating;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed);
 
-        ImageView mMoviePoster = findViewById(R.id.tv_movie_poster);
-        TextView mMovieTitle =  findViewById(R.id.tv_movie_title);
-        TextView mMovieSummary = findViewById(R.id.tv_summary);
-        TextView mMovieReleaseDate = findViewById(R.id.tv_release_date);
-        TextView mMovieUserRating = findViewById(R.id.tv_user_review);
+        mMoviePoster = findViewById(R.id.tv_movie_poster);
+        mMovieTitle =  findViewById(R.id.tv_movie_title);
+        mMovieSummary = findViewById(R.id.tv_summary);
+        mMovieReleaseDate = findViewById(R.id.tv_release_date);
+        mMovieUserRating = findViewById(R.id.tv_user_review);
 
+        setupUI();
+    }
+
+    private void setupUI(){
         Intent intent = getIntent();
         if (intent.hasExtra(Intent.EXTRA_TEXT)){
             String movieData = intent.getStringExtra(Intent.EXTRA_TEXT);
